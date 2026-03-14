@@ -109,7 +109,7 @@ fetch('https://votre-svc-local.com/service-endpoint', {
 | Nom | Contribution | Profil |
 | :--- | :--- | :--- |
 | **Brahim EL BAHLOUL** | Architecture Système | Master SDA - FPS & EST Safi |
-| **ABADA Aziz** | Stratégie Documentation & DevOps| YouCode UM6P |
+| **ABADA Aziz** |DevOps & Stratégie Documentation | YouCode UM6P |
 
 ---
 
