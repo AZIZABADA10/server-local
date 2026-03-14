@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Image Upload</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin: 40px;
+        }
+
+        img {
+            width: 200px;
+            margin: 10px;
+            border-radius: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h2>Upload Image</h2>
+
+    <input type="file" id="file">
+    <button onclick="upload()">Upload</button>
+
+    <h2>Images</h2>
+
+    <div id="gallery"></div>
+
+    <script>
+
+        const SERVER = "http://192.168.0.104:5000"
+
+
+        async function upload() {
+
+            let file = document.getElementById("file").files[0]
+
+            let formData = new FormData()
+
+            formData.append("image", file)
+
+            await fetch(SERVER + "/upload", {
+                method: "POST",
+                body: formData
+            })
+
+            loadImages()
+
+        }
+
+
+        async function loadImages() {
+
+            let res = await fetch(SERVER + "/images")
+
+            let images = await res.json()
+
+            let gallery = document.getElementById("gallery")
+
+            gallery.innerHTML = ""
+
+            images.forEach(img => {
+
+                let image = document.createElement("img")
+
+                image.src = SERVER + "/images/" + img
+
+                gallery.appendChild(image)
+
+            })
+
+        }
+
+        loadImages()
+
+    </script>
+
+</body>
+
+</html>
