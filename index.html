@@ -1,94 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Image Upload</title>
+<meta charset="UTF-8">
+<title>Image Upload</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            margin: 40px;
-        }
+<style>
 
-        img {
-            width: 200px;
-            margin: 10px;
-            border-radius: 10px;
-        }
-    </style>
+body{
+    font-family: Arial;
+    text-align:center;
+    margin:40px;
+}
 
+button{
+    padding:10px 20px;
+    cursor:pointer;
+}
+
+#gallery{
+    margin-top:20px;
+}
+
+img{
+    width:200px;
+    margin:10px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+
+</style>
 </head>
 
 <body>
 
-    <h2>Upload Image</h2>
+<h2>Upload Image</h2>
 
-    <input type="file" id="file">
-    <button onclick="upload()">Upload</button>
+<input type="file" id="file" accept="image/*">
+<button onclick="upload()">Upload</button>
 
-    <h2>Images</h2>
+<h2>Images</h2>
 
-    <div id="gallery"></div>
+<div id="gallery"></div>
 
-    <script>
+<script>
 
-        const SERVER = "http://10.66.66.84:5000"
+const SERVER = "https://10.66.66.84:5000"
 
 
-        async function upload() {
-    let fileInput = document.getElementById("file");
-    
-     if (fileInput.files.length === 0) {
-        alert("Veuillez d'abord sélectionner une image !");
-        return; 
+async function upload(){
+
+    const fileInput = document.getElementById("file")
+
+    if(fileInput.files.length === 0){
+        alert("Veuillez sélectionner une image")
+        return
     }
 
-    let file = fileInput.files[0];
-    let formData = new FormData();
-    formData.append("image", file);
+    const file = fileInput.files[0]
 
-    try {
-        await fetch(SERVER + "/upload", {
-            method: "POST",
-            body: formData
-        });
-        
-         fileInput.value = ""; 
-        
-        loadImages();
-    } catch (error) {
-        console.error("Erreur lors de l'upload :", error);
-    }
-}
+    const formData = new FormData()
+    formData.append("image", file)
 
-        async function loadImages() {
+    try{
 
-            let res = await fetch(SERVER + "/images")
+        const res = await fetch(SERVER + "/upload",{
+            method:"POST",
+            body:formData
+        })
 
-            let images = await res.json()
-
-            let gallery = document.getElementById("gallery")
-
-            gallery.innerHTML = ""
-
-            images.forEach(img => {
-
-                let image = document.createElement("img")
-
-                image.src = SERVER + "/images/" + img
-
-                gallery.appendChild(image)
-
-            })
-
+        if(!res.ok){
+            throw new Error("Upload échoué")
         }
+
+        const data = await res.json()
+
+        console.log("Upload success:",data)
+
+        fileInput.value=""
 
         loadImages()
 
-    </script>
+    }
+    catch(err){
+        console.error("Erreur upload:",err)
+        alert("Erreur lors de l'upload")
+    }
+
+}
+
+
+async function loadImages(){
+
+    try{
+
+        const res = await fetch(SERVER + "/images")
+
+        if(!res.ok){
+            throw new Error("Erreur chargement images")
+        }
+
+        const images = await res.json()
+
+        const gallery = document.getElementById("gallery")
+
+        gallery.innerHTML=""
+
+        images.forEach(img=>{
+
+            const image = document.createElement("img")
+
+            image.src = SERVER + "/images/" + img
+
+            gallery.appendChild(image)
+
+        })
+
+    }
+    catch(err){
+        console.error("Erreur load images:",err)
+    }
+
+}
+
+loadImages()
+
+</script>
 
 </body>
-
 </html>

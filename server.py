@@ -38,7 +38,7 @@ def upload():
 @app.route("/images", methods=["GET"])
 def list_images():
     files = os.listdir(UPLOAD_FOLDER)
-    images = [f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp'))]
+    images = [f for f in files if f.lower().endswith(('.png','.jpg','.jpeg','.gif','.webp'))]
     return jsonify(images)
 
 @app.route("/images/<filename>", methods=["GET"])
@@ -46,4 +46,8 @@ def get_image(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == "__main__":
-    app.run(host="10.66.66.84", port=5000)  
+    app.run(
+        host="10.66.66.84",
+        port=5000,
+        ssl_context="adhoc"   
+    )
